@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Gestão de Usuários</title>
+    <style>
+        body { margin: 0; font-family: 'Segoe UI', sans-serif; background-color: #f0f2f5; display: flex; }
+        .sidebar { width: 220px; background-color: #1a73e8; color: white; height: 100vh; position: fixed; padding: 20px 15px; box-sizing: border-box; }
+        .sidebar a { display: block; color: white; text-decoration: none; padding: 12px; margin-bottom: 5px; border-radius: 6px; }
+        .main-content { flex: 1; margin-left: 220px; padding: 40px; }
+        .container { max-width: 600px; margin: auto; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        input { width: 100%; padding: 10px; margin: 10px 0 20px 0; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box; }
+        .btn-add { background: #28a745; color: white; border: none; padding: 12px; width: 100%; border-radius: 8px; font-weight: bold; cursor: pointer; }
+        .user-list { margin-top: 30px; border-top: 2px solid #eee; padding-top: 20px; }
+        .user-item { padding: 10px; border-bottom: 1px solid #eee; color: #555; }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <h2>🩺 Painel Mestre</h2>
+        <a href="/pacientes">👥 Pacientes</a>
+        <a href="/inventario">📦 Inventário</a>
+        <a href="/usuarios" style="background: #1557b0;">🔑 Gerenciar Acessos</a>
+    </div>
+
+    <div class="main-content">
+        <div class="container">
+            <h2>🔑 Adicionar Novo Usuário</h2>
+            <form method="POST">
+                <label>Nome de Login:</label>
+                <input type="text" name="login" required placeholder="Ex: enfermeira_ana">
+                
+                <label>Senha de Acesso:</label>
+                <input type="password" name="senha" required placeholder="Digite a senha">
+                
+                <button type="submit" class="btn-add">Cadastrar Usuário</button>
+            </form>
+
+            <div class="user-list">
+                <h3>👥 Usuários com Acesso</h3>
+                {% for user in usuarios %}
+                    <div class="user-item">
+                        <strong>{{ user.login }}</strong> 
+                        {% if user.login == 'admin' %} (Mestre) {% endif %}
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+<div class="user-list">
+    <h3>👥 Usuários com Acesso</h3>
+    {% for user in usuarios %}
+        <div class="user-item" style="display: flex; justify-content: space-between; align-items: center; padding: 12px; border-bottom: 1px solid #eee;">
+            <div>
+                <strong>{{ user.login }}</strong> 
+                {% if user.login == 'admin' %} 
+                    <span style="color: #1a73e8; font-size: 0.8em;">(Mestre)</span> 
+                {% endif %}
+            </div>
+            
+            {% if user.login != 'admin' %}
+                <a href="/excluir_usuario/{{ user.id }}" 
+                   onclick="return confirm('Tem certeza que deseja remover o acesso deste usuário?')"
+                   style="color: #d32f2f; text-decoration: none; font-size: 0.9em; font-weight: bold;">
+                   Excluir
+                </a>
+            {% endif %}
+        </div>
+    {% endfor %}
+</div>
+
+</body>
+</html>

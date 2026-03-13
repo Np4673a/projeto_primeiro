@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Prontuário: {{ paciente.nome }}</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f0f2f5; margin: 0; padding: 20px; color: #333; }
+        .container { max-width: 800px; margin: auto; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+        
+        h1 { color: #1a73e8; border-bottom: 2px solid #e1e4e8; padding-bottom: 10px; margin-top: 0; }
+        h3 { color: #2c3e50; margin-top: 30px; border-left: 5px solid #1a73e8; padding-left: 15px; }
+        
+        .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 25px; }
+        .info-item { background: #f8f9fa; padding: 12px; border-radius: 8px; border: 1px solid #eee; }
+        .info-item strong { color: #1a73e8; display: block; margin-bottom: 4px; font-size: 0.9em; text-transform: uppercase; }
+
+        .form-consulta { background: #f1f8ff; padding: 20px; border-radius: 10px; border: 1px solid #c8e1ff; margin: 20px 0; }
+        textarea { width: 100%; height: 100px; padding: 12px; border: 1px solid #ccc; border-radius: 6px; resize: vertical; font-family: inherit; box-sizing: border-box; }
+        .btn-salvar { background-color: #28a745; color: white; border: none; padding: 12px 20px; border-radius: 6px; cursor: pointer; font-weight: bold; width: 100%; margin-top: 10px; transition: 0.3s; }
+        .btn-salvar:hover { background-color: #218838; }
+
+        .historico-lista { margin-top: 20px; }
+        .consulta-card { background: #fff; border: 1px solid #e1e4e8; padding: 15px; border-radius: 8px; margin-bottom: 15px; position: relative; }
+        .consulta-data { font-size: 0.85em; color: #6a737d; font-weight: bold; margin-bottom: 8px; display: block; }
+        .consulta-texto { white-space: pre-wrap; margin: 0; line-height: 1.5; }
+
+        .voltar { text-decoration: none; color: #1a73e8; font-weight: bold; display: inline-block; margin-bottom: 20px; }
+        .voltar:hover { text-decoration: underline; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <a href="/pacientes" class="voltar">← Voltar para a Lista de Pacientes</a>
+    
+    <h1>🩺 Prontuário Médico</h1>
+
+    <div class="info-grid">
+        <div class="info-item"><strong>Nome Completo</strong> {{ paciente.nome }}</div>
+        <div class="info-item"><strong>CPF</strong> {{ paciente.cpf or 'Não cadastrado' }}</div>
+        <div class="info-item"><strong>Idade</strong> {{ paciente.calcular_idade() }} anos</div>
+        <div class="info-item"><strong>Data de Nascimento</strong> {{ paciente.data_nascimento.strftime('%d/%m/%Y') if paciente.data_nascimento else '---' }}</div>
+    </div>
+
+    <div class="info-item" style="margin-bottom: 15px;">
+        <strong>Comorbidades e Observações</strong>
+        {{ paciente.comorbidades or 'Nenhuma informação registrada.' }}
+    </div>
+
+    <hr>
+
+    <h3>📝 Registrar Evolução do Paciente</h3>
+    <div class="form-consulta">
+        <form action="/paciente/{{ paciente.id }}/nova_consulta" method="POST">
+            <textarea name="informacoes" required placeholder="Digite aqui os detalhes da consulta, sintomas, prescrições ou evolução..."></textarea>
+            <button type="submit" class="btn-salvar">Salvar Registro no Histórico</button>
+        </form>
+    </div>
+
+    <h3>📅 Histórico de Consultas</h3>
+    <div class="historico-lista">
+        {% if historico_consultas %}
+            {% for c in historico_consultas %}
+                <div class="consulta-card">
+                    <span class="consulta-data">🗓️ {{ c.data_consulta.strftime('%d/%m/%Y às %H:%M') }}</span>
+                    <p class="consulta-texto">{{ c.informacoes }}</p>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p style="color: #666; font-style: italic; text-align: center; padding: 20px;">Nenhum histórico registrado para este paciente ainda.</p>
+        {% endif %}
+    </div>
+</div>
+
+</body>
+</html>

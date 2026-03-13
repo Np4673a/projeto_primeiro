@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Sistema Médico - Lista</title>
+    <style>
+        /* Remove as margens padrão do navegador */
+        body { margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; background-color: #f0f2f5; display: flex; }
+
+        /* FAIXA AZUL LATERAL - Ajustada para ser mais fina e começar no topo */
+        .sidebar { 
+            width: 220px; /* Reduzi um pouco a largura como você pediu */
+            background-color: #1a73e8; 
+            color: white; 
+            height: 100vh; /* Altura total da tela */
+            position: fixed; /* Fica fixa no topo e lateral */
+            top: 0;
+            left: 0;
+            padding: 20px 15px;
+            box-sizing: border-box;
+            z-index: 1000;
+        }
+
+        .sidebar h2 { font-size: 1.1em; border-bottom: 1px solid #64b5f6; padding-bottom: 15px; margin-top: 0; }
+        .sidebar a { display: block; color: white; text-decoration: none; padding: 12px; margin-bottom: 5px; border-radius: 6px; transition: 0.2s; }
+        .sidebar a:hover { background: #1557b0; }
+        .active { background: #1557b0; font-weight: bold; }
+
+        /* CONTEÚDO PRINCIPAL - Ocupa o resto da página */
+        .main-content { 
+            flex: 1; 
+            margin-left: 220px; /* Deve ser igual à largura da sidebar */
+            padding: 40px; 
+            min-height: 100vh;
+            box-sizing: border-box;
+        }
+
+        /* O Container da sua lista (estilo que você já tinha) */
+        .container { 
+            max-width: 900px; 
+            margin: auto; 
+            background: white; 
+            padding: 30px; 
+            border-radius: 12px; 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1); 
+        }
+
+        /* Estilos da sua barra de pesquisa e itens da lista... */
+        .search-container { display: flex; gap: 10px; margin: 20px 0; }
+        .search-input { flex: 1; padding: 12px; border: 1px solid #ddd; border-radius: 8px; }
+        .btn-buscar { background: #1a73e8; color: white; border: none; padding: 10px 25px; border-radius: 8px; cursor: pointer; }
+    </style>
+</head>
+<body>
+
+    <div class="sidebar">
+        <h2>🩺 Sistema Médico</h2>
+        <nav>
+            <a href="/pacientes" class="active">👥 Pacientes</a>
+            <a href="/inventario">📦 Inventário Farmácia</a>
+        </nav>
+    </div>
+
+    <div class="main-content">
+        <div class="container">
+            <h2>📋 Pacientes da Comunidade</h2>
+
+            <form action="/pacientes" method="GET" class="search-container">
+                <input type="text" name="q" value="{{ busca or '' }}" placeholder="Pesquisar por nome, remédio ou doença..." class="search-input">
+                <button type="submit" class="btn-buscar">🔍 Buscar</button>
+            </form>
+
+            <a href="/cadastrar" style="display: inline-block; background: #28a745; color: white; text-decoration: none; padding: 12px 20px; border-radius: 8px; margin-bottom: 20px; font-weight: bold;">
+                + Cadastrar Novo Paciente
+            </a>
+
+            <div class="lista">
+                {% for p in pacientes %}
+                    <div style="display: flex; justify-content: space-between; align-items: center; padding: 15px; border-bottom: 1px solid #f0f0f0;">
+                        <a href="/paciente/{{ p.id }}" style="font-weight: bold; color: #1a73e8; text-decoration: none;">{{ p.nome }}</a>
+                       <span style="color: #666; margin-left: 15px;">
+                             {{ p.data_nascimento.strftime('%d/%m/%Y') if p.data_nascimento else 'Sem data' }}
+                        </span>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <div class="sidebar">
+    <h2>🩺 Sistema Médico</h2>
+    <nav>
+        <a href="/pacientes" class="active">👥 Pacientes</a>
+        <a href="/inventario">📦 Inventário Farmácia</a>
+        
+        {% if session.get('usuario_id') %}
+            <a href="/usuarios">🔑 Gerenciar Usuários</a>
+        {% endif %}
+    </nav>
+</div>
+
+</body>
+</html>

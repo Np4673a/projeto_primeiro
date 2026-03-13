@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Rastreio de Lote - {{ lote.numero_lote }}</title>
+    <style>
+        body { margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; background-color: #f0f2f5; display: flex; }
+        
+        .sidebar { 
+            width: 220px; background-color: #1a73e8; color: white; height: 100vh; 
+            position: fixed; top: 0; left: 0; padding: 20px 15px; box-sizing: border-box; 
+        }
+        .sidebar h2 { font-size: 1.1em; border-bottom: 1px solid #64b5f6; padding-bottom: 15px; margin-top: 0; }
+        .sidebar a { display: block; color: white; text-decoration: none; padding: 12px; margin-bottom: 5px; border-radius: 6px; }
+        .sidebar a:hover { background: #1557b0; }
+
+        .main-content { flex: 1; margin-left: 220px; padding: 40px; box-sizing: border-box; }
+        .container { max-width: 800px; margin: auto; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        
+        .header-lote { border-bottom: 2px solid #eee; margin-bottom: 20px; padding-bottom: 10px; }
+        .form-baixa { background: #fff3e0; padding: 20px; border-radius: 8px; border: 1px solid #ffe0b2; margin-bottom: 30px; }
+        .form-baixa input { padding: 10px; border: 1px solid #ccc; border-radius: 4px; margin-right: 10px; }
+        .btn-confirmar { background: #e65100; color: white; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer; font-weight: bold; }
+        
+        .item-historico { background: #f8f9fa; border-left: 4px solid #28a745; padding: 15px; margin-bottom: 10px; border-radius: 4px; }
+    </style>
+</head>
+<body>
+
+    <div class="sidebar">
+        <h2>🩺 Sistema Médico</h2>
+        <nav>
+            <a href="/pacientes">👥 Pacientes</a>
+            <a href="/inventario" style="background: #1557b0;">📦 Inventário Farmácia</a>
+        </nav>
+    </div>
+
+    <div class="main-content">
+        <div class="container">
+            <a href="/inventario" style="text-decoration: none; color: #1a73e8;">← Voltar ao Inventário</a>
+            
+            <div class="header-lote">
+                <h1>💊 Lote: {{ lote.numero_lote }}</h1>
+                <p>Medicamento: <strong>{{ lote.nome_remedio }}</strong></p>
+                <p>Estoque Atual: <span style="font-size: 1.2em; color: #1a73e8; font-weight: bold;">{{ lote.quantidade_atual }} unid.</span></p>
+            </div>
+
+            <div class="form-baixa">
+                <h3>📤 Registrar Entrega de Remédio</h3>
+                <form action="/inventario/lote/{{ lote.id }}/saida" method="POST">
+                    <input type="text" name="paciente_nome" placeholder="Nome do Paciente" required style="width: 250px;">
+                    <input type="number" name="quantidade_saida" placeholder="Qtd" required style="width: 80px;">
+                    <button type="submit" class="btn-confirmar">Confirmar Entrega</button>
+                </form>
+            </div>
+
+            <h3>📋 Histórico de Saídas (Quem recebeu)</h3>
+            {% for mov in lote.movimentacoes %}
+                <div class="item-historico">
+                    <strong>Data:</strong> {{ mov.data_entrega.strftime('%d/%m/%Y %H:%M') }} <br>
+                    <strong>Paciente:</strong> {{ mov.paciente_nome }} <br>
+                    <strong>Quantidade:</strong> {{ mov.quantidade_saida }} unidades
+                </div>
+            {% else %}
+                <p style="color: #999;">Nenhuma entrega registrada para este lote.</p>
+            {% endfor %}
+        </div>
+    </div>
+
+</body>
+</html>

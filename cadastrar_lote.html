@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Novo Lote - Farmácia</title>
+    <style>
+        body { margin: 0; font-family: 'Segoe UI', sans-serif; background-color: #f0f2f5; display: flex; }
+        .sidebar { width: 220px; background-color: #1a73e8; color: white; height: 100vh; position: fixed; padding: 20px 15px; box-sizing: border-box; }
+        .sidebar a { display: block; color: white; text-decoration: none; padding: 12px; margin-bottom: 5px; border-radius: 6px; }
+        .main-content { flex: 1; margin-left: 220px; padding: 40px; }
+        .container { max-width: 600px; margin: auto; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        input { width: 100%; padding: 10px; margin: 10px 0 20px 0; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box; }
+        .btn-salvar { background: #28a745; color: white; border: none; padding: 15px; width: 100%; border-radius: 8px; font-weight: bold; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <h2>🩺 Sistema</h2>
+        <a href="/pacientes">👥 Pacientes</a>
+        <a href="/inventario" style="background: #1557b0;">📦 Inventário</a>
+    </div>
+
+    <div class="main-content">
+        <div class="container">
+            <h2>➕ Cadastrar Novo Lote</h2>
+            <form method="POST">
+                <label>Nome do Medicamento:</label>
+                <input type="text" name="nome_remedio" required placeholder="Ex: Losartana 50mg">
+                
+                <label>Número do Lote:</label>
+                <input type="text" name="numero_lote" required placeholder="Ex: LOT2024-01">
+                
+                <label>Quantidade de Comprimidos/Unidades:</label>
+                <input type="number" name="quantidade" required min="1">
+                
+                <label>Data de Validade:</label>
+                <input type="date" name="validade" required>
+                
+                <button type="submit" class="btn-salvar">Salvar no Inventário</button>
+            </form>
+            <br>
+            <a href="/inventario" style="color: #666; text-decoration: none;">← Cancelar e Voltar</a>
+        </div>
+    </div>
+</body>
+</html>
